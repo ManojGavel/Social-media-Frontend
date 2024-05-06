@@ -1,0 +1,23 @@
+.fullHeight {
+  height: 100vh;
+}
+.signUpContainer {
+  height: 50vh;
+  padding-top: 10vh;
+}
+.signLock {
+  background: rgb(0, 110, 255);
+  padding: 10px;
+  border-radius: 100%;
+  padding-top: 2vh;
+}
+.warningPara {
+  height: 40px;
+}
+.warningPara > p {
+  padding: 0;
+  margin: 0;
+  color: red;
+  text-align: start;
+  font-weight: bold;
+}

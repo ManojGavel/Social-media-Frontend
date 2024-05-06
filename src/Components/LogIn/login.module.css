@@ -1,0 +1,37 @@
+.loginContainer::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-image: linear-gradient(
+    to right top,
+    #d16ba5,
+    #f9718f,
+    #ff8370,
+    #ffa24e,
+    #ffc632,
+    #f6d927,
+    #e7ec25,
+    #d3ff31,
+    #b1ff4a,
+    #8dff62,
+    #61ff79,
+    #00ff90
+  );
+  z-index: -1;
+}
+.warningPara {
+  color: red;
+  text-align: center;
+  height: 30px;
+}
+.warningPara > p {
+  margin-top: 0;
+  padding: 0;
+}
+
+.loginBox {
+  padding-top: 15vh;
+  /* box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2); */
+}
