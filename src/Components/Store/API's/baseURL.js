@@ -20,6 +20,8 @@ export const baseURL = createApi({
     credentials: "include",
   }),
 
+  tagTypes: ["User", "Post", "Friend"],
+
   endpoints: (builder) => ({
     signupUser: builder.mutation({
       query: (body) => ({
@@ -51,9 +53,19 @@ export const baseURL = createApi({
     getPosts: builder.query({
       query: () => "posts/",
     }),
-getAllFriends: builder.query({
+    getAllFriends: builder.query({
       query: () => "friends/friendsList/",
     }),
+
+    addFriend: builder.mutation({
+      query: (body) => ({
+        url: "friends/",
+        method: "POST",
+        body,
+        invalidatesTags: ["Friend"],
+      }),
+    }),
+   
   }),
 });
 
@@ -64,4 +76,5 @@ export const {
   useCreatePostMutation,
   useGetPostsQuery,
   useGetAllFriendsQuery,
+  useAddFriendMutation,
 } = baseURL;

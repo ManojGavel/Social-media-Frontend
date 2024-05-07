@@ -8,7 +8,7 @@ import {
   OutlinedInput,
   TextField,
 } from "@mui/material";
-import React, { Fragment } from "react";
+import React, { Fragment, useEffect } from "react";
 import classes from "./login.module.css";
 import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
@@ -27,6 +27,13 @@ const navigate = useNavigate();
     handleSubmit,
   } = useForm();
 
+  useEffect(() => {
+    const jwt = Cookies.get("jwt");
+    if (jwt) {
+      return navigate("/home");
+    }
+  }, []);
+
   const handleClickShowPassword = () => setShowPassword((show) => !show);
   const handleMouseDownPassword = (event) => {
     event.preventDefault();
@@ -42,6 +49,8 @@ const navigate = useNavigate();
 
     }).catch((rejectedValueOrSerializedError) => {
       console.log(rejectedValueOrSerializedError);
+      console.error(rejectedValueOrSerializedError.data.message)
+      alert(rejectedValueOrSerializedError.data.message)
     });
   };
   return (

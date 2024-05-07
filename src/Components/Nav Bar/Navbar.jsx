@@ -17,11 +17,17 @@ import MenuIcon from "@mui/icons-material/Menu";
 import QuaggaLogo from "../../Logo/Quagga logo 8.png";
 import { blueGrey } from "@mui/material/colors";
 import classes from "./Navbar.module.css";
+import { useLogoutMutation } from "../Store/API's/baseURL";
+import { useNavigate } from "react-router-dom";
+import Cookies from "js-cookie";
 
 const pages = ["Home", "About", "Blog"];
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
 
 export default function Navbar() {
+  const [logout] = useLogoutMutation();
+  const navigate = useNavigate();
+
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
 
@@ -36,7 +42,20 @@ export default function Navbar() {
     setAnchorElNav(null);
   };
 
-  const handleCloseUserMenu = () => {
+  const handleCloseUserMenu = (setting) => {
+    console.log(setting);
+    if (setting === "Logout") {
+      // logout()
+      //   .unwrap()
+      //   .then((originalPromiseResult) => {
+          // console.log(originalPromiseResult);
+          Cookies.remove("jwt");
+          navigate("/login");
+        // })
+        // .catch((rejectedValueOrSerializedError) => {
+        //   console.log(rejectedValueOrSerializedError);
+        // });
+    }
     setAnchorElUser(null);
   };
   return (
@@ -45,13 +64,18 @@ export default function Navbar() {
         position="static"
         sx={{
           backgroundColor: blueGrey[900],
-          position:"absolute",
-          top:"0px"
+          position: "absolute",
+          top: "0px",
         }}
       >
         <Container maxWidth="xl">
           <Toolbar disableGutters>
-            <img src={QuaggaLogo} className={classes.logo} alt="logo" height={"30px"} />
+            <img
+              src={QuaggaLogo}
+              className={classes.logo}
+              alt="logo"
+              height={"30px"}
+            />
             <Typography
               variant="h6"
               noWrap
@@ -160,7 +184,10 @@ export default function Navbar() {
                 onClose={handleCloseUserMenu}
               >
                 {settings.map((setting) => (
-                  <MenuItem key={setting} onClick={handleCloseUserMenu}>
+                  <MenuItem
+                    key={setting}
+                    onClick={() => handleCloseUserMenu(setting)}
+                  >
                     <Typography textAlign="center">{setting}</Typography>
                   </MenuItem>
                 ))}
