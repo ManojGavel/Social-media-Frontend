@@ -1,16 +1,12 @@
-import { create } from "@mui/material/styles/createTransitions";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import Cookies from "js-cookie";
-import { get } from "react-hook-form";
 
 export const baseURL = createApi({
   reducerPath: "baseURL",
   baseQuery: fetchBaseQuery({
     baseUrl: "http://localhost:8000/api/v1/",
     prepareHeaders: (headers, { getState }) => {
-      // Automatically include the 'Content-Type' header for every request
-      headers.set("Content-Type", "application/json");
-      // Include the 'Authorization' header if a JWT cookie is available
+      // headers.set("Content-Type", "application/json");
       const token = Cookies.get("jwt");
       if (token) {
         headers.set("Authorization", `Bearer ${token}`);
@@ -52,6 +48,9 @@ export const baseURL = createApi({
     }),
     getPosts: builder.query({
       query: () => "posts/",
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
     }),
     getAllFriends: builder.query({
       query: () => "friends/friendsList/",

@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
 import {
   useAddFriendMutation,
+  useCreatePostMutation,
   useGetAllFriendsQuery,
   useGetPostsQuery,
 } from "./../Store/API's/baseURL";
@@ -15,7 +16,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { useForm, SubmitHandler } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import CollectionsIcon from "@mui/icons-material/Collections";
 import { styled } from "@mui/material/styles";
 
@@ -35,6 +36,12 @@ export default function Home() {
   const navigate = useNavigate();
   const { register, handleSubmit } = useForm();
   const [addFriend] = useAddFriendMutation();
+  const [createPost] = useCreatePostMutation();
+  const [writePost, setWritePost] = React.useState("");
+  const [postImg, setPostImg] = React.useState(null);
+
+
+
 
   useEffect(() => {
     let time = setTimeout(() => {
@@ -50,6 +57,8 @@ export default function Home() {
     error: postError,
     isLoading: postLoading,
   } = useGetPostsQuery();
+
+console.log(posts?.data?.posts,"posts")
 
   const {
     data: friendsList,
@@ -71,6 +80,22 @@ export default function Home() {
 
   const handlePostUpload = (data) => {
     console.log(data);
+    const formData = new FormData();
+    formData.append("title", data.postText);
+    formData.append("body", data.postText);
+    formData.append("image", data.postImg[0]);
+    createPost(formData)
+      .unwrap()
+      .then((originalPromiseResult) => {
+        console.log(originalPromiseResult);
+        data.postText = "";
+        data.postImg = "";
+        setWritePost("");
+        setPostImg(null);
+      })
+      .catch((rejectedValueOrSerializedError) => {
+        console.log(rejectedValueOrSerializedError);
+      });
   };
 
   return (
@@ -84,7 +109,6 @@ export default function Home() {
             flexWrap: "wrap",
             justifyContent: "center",
           }}
-          // width={"500px"}
           mt={12}
         >
           {friendsList?.data.map((friend) => (
@@ -126,29 +150,40 @@ export default function Home() {
           ))}
         </Box>
 
-        <div sx={{
-          display: "flex",
-          flexDirection: "column",
-          gap: "10px",
-          justifyContent: "center",
-          alignItems: "center",
-          width: "100%",
-          mt: "20px", 
-          
-        }}>
+        <div
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            gap: "10px",
+            justifyContent: "center",
+            alignItems: "center",
+            width: "100%",
+            mt: "20px",
+          }}
+        >
+          {/* <div style={{ width: "40px" }}>
+            {postImg && <img src={url} alt="post Img" />}
+          </div> */}
           <TextField
             label="Write your post"
-            // multiline
-            // rows={2}
+            value={writePost}
             {...register("postText", { required: "Post is required" })}
+            onChange={(e) => setWritePost(e.target.value)}
           />
           <Button
             component="label"
             role={undefined}
-
             startIcon={<CollectionsIcon />}
           >
-            <VisuallyHiddenInput type="file" accept="image/*" {...register("postImg")} />
+            <VisuallyHiddenInput
+              type="file"
+              accept="image/*"
+              {...register("postImg")}
+              onChange={(e) => {
+                setPostImg(e.target.files[0]);
+                console.log(e.target.files[0]);
+              }}
+            />
           </Button>
 
           <Button
@@ -164,13 +199,14 @@ export default function Home() {
         {posts?.data?.posts &&
           posts?.data.posts.map((post) => {
             return (
-              <div key={post.id}>
-                <h1>{post.title}</h1>
-                <p>{post.body}</p>
+              <div key={post._id}>
+                <h1>{post.description}</h1>
+{post.image&&<img src={post.image} alt="" />}
               </div>
             );
           })}
       </div>
+      {}
     </div>
   );
 }
